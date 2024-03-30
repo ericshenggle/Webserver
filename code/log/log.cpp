@@ -26,7 +26,7 @@ Log::~Log() {
     }
     if(fp_) {
         lock_guard<mutex> locker(mtx_);
-        flush();
+        fflush(fp_);
         fclose(fp_);
     }
 }
@@ -41,8 +41,7 @@ void Log::SetLevel(int level) {
     level_ = level;
 }
 
-void Log::init(int level = 1, const char* path, const char* suffix,
-    int maxQueueSize) {
+void Log::init(const char* path, const char* suffix, int maxQueueSize, int level) {
     isOpen_ = true;
     level_ = level;
     if(maxQueueSize > 0) {

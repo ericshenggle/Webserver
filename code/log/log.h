@@ -19,9 +19,10 @@
 
 class Log {
 public:
-    void init(int level, const char* path = "./log", 
+    void init(const char* path = "./log", 
                 const char* suffix =".log",
-                int maxQueueCapacity = 1024);
+                int maxQueueCapacity = 1024,
+                int level = 1);
 
     static Log* Instance();
     static void FlushLogThread();

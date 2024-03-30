@@ -152,10 +152,10 @@ template<class T>
 bool BlockDeque<T>::pop(T &item) {
     std::unique_lock<std::mutex> locker(mtx_);
     while(deq_.empty()){
-        condConsumer_.wait(locker);
         if(isClose_){
             return false;
         }
+        condConsumer_.wait(locker);
     }
     item = deq_.front();
     deq_.pop_front();

@@ -55,7 +55,13 @@ bool HttpRequest::parse(Buffer& buff) {
         default:
             break;
         }
-        if(lineEnd == buff.BeginWrite()) { break; }
+        if(lineEnd == buff.BeginWrite()) { 
+            if(state_ == FINISH && method_ == "POST") {
+                // 若当前方法为POST，则在解析BODY之后已经读到写端，需要将读端移到写端后再返回，否则下一次处理请求会RequestLine Error！！！
+                buff.RetrieveUntil(lineEnd);
+            }
+            break; 
+        }
         buff.RetrieveUntil(lineEnd + 2);
     }
     LOG_DEBUG("[%s], [%s], [%s]", method_.c_str(), path_.c_str(), version_.c_str());
