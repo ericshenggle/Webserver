@@ -16,7 +16,7 @@ WebServer::WebServer(
             port_(port), openLinger_(OptLinger), timeoutMS_(timeoutMS), isClose_(false),
             timer_(new HeapTimer()), threadpool_(new ThreadPool(threadNum)), epoller_(new Epoller())
     {
-    Log::Instance()->init("./log", ".log", logQueSize, logLevel);
+    if (openLog) Log::Instance()->init("./log", ".log", logQueSize, logLevel);
     srcDir_ = getcwd(nullptr, 256);
     assert(srcDir_);
     strncat(srcDir_, "/resources/", 16);

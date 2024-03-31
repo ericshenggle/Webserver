@@ -138,7 +138,12 @@ void Log::write(int level, const char *format, ...) {
         buff_.HasWritten(m);
         buff_.Append("\n\0", 2);
 
-        if(isAsync_ && deque_ && !deque_->full()) {
+        if(isAsync_ && deque_) {
+            while(deque_->full()) {
+                locker.unlock();
+                deque_->flush();
+                locker.lock();
+            }
             deque_->push_back(buff_.RetrieveAllToStr());
         } else {
             fputs(buff_.Peek(), fp_);
